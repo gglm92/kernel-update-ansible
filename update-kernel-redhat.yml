@@ -1,10 +1,8 @@
 - name: upgrade the kernel
   hosts: servers
   become: true
-  vars:
-    kernelversion: 3.10.0-1062.4.3.el7.x86_64
   tasks:
-    
+
     - name: upgrade the kernel
       yum:
         name: kernel-{{ kernelversion}}
