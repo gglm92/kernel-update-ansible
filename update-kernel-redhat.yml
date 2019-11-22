@@ -4,12 +4,6 @@
   vars:
     kernelversion: 3.10.0-1062.4.3.el7.x86_64
   tasks:
-    - name:                 Register Red Hat
-      redhat_subscription:
-        state:              present
-        username:           "{{ redhatuser }}"
-        password:           "{{ redhatpass }}" 
-        auto_attach:        true
     
     - name: upgrade the kernel
       yum:
