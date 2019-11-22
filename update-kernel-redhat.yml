@@ -2,21 +2,24 @@
   hosts: servers
   become: true
   tasks:
-
-    - name: upgrade the kernel
-      yum:
-        name: kernel-{{ kernelversion}}
-        state: present
-
-    - name: reboot
-      reboot:
-
     - debug:
-        msg: Kernel Version {{ ansible_kernel }}
+        msg: "{{ ansible_kernel }}"
+      register: ansiblekernel
 
-    - name: delete last kernel
-      command: package-cleanup --oldkernels --count=1 -y
+    - block:
+      - name: upgrade the kernel
+        yum:
+          name: kernel-{{ kernelversion}}
+          state: present
 
-    - name: reboot
-      reboot:
-#      when: {{ kernelversion != ansible_kernel }}
+      - name: reboot
+        reboot:
+
+
+      - name: delete last kernel
+        command: package-cleanup --oldkernels --count=1 -y
+
+      - name: reboot
+        reboot:
+
+      when: "{{ actualkernel in ansiblekernel.msg }}"
