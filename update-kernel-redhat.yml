@@ -7,20 +7,20 @@
       yum:
         name: kernel-{{ kernelversion}}
         state: present
-      when: "{{ kernelversion }}!={{ ansible_kernel }}"
+      when: "{{ kernelversion != ansible_kernel }}"
 
     - name: reboot
       reboot:
-      when: "{{ kernelversion }}!={{ ansible_kernel }}"
+      when: "{{ kernelversion != ansible_kernel }}"
 
     - debug:
         msg: Kernel Version {{ ansible_kernel }}
-      when: "{{ kernelversion }}!={{ ansible_kernel }}"
+      when: "{{ kernelversion != ansible_kernel }}"
 
     - name: delete last kernel
       command: package-cleanup --oldkernels --count=1 -y
-      when: "{{ kernelversion }}!={{ ansible_kernel }}"
-      
+      when: "{{ kernelversion != ansible_kernel }}"
+
     - name: reboot
       reboot:
-      when: "{{ kernelversion }}!={{ ansible_kernel }}"
+      when: "{{ kernelversion != ansible_kernel }}"
