@@ -1,0 +1,37 @@
+- name: upgrade the kernel
+  hosts: servers
+  become: true
+  vars:
+    redhatuser: gglm92
+    redhatpass: Guruguru123$
+    kernelversion: 3.10.0-1062.4.3.el7.x86_64
+  tasks:
+    - name:                 Register Red Hat
+      redhat_subscription:
+        state:              present
+        username:           "{{ redhatuser }}"
+        password:           "{{ redhatpass }}" 
+        auto_attach:        true
+    
+    - name: upgrade the kernel
+      yum:
+        name: kernel-{{ kernelversion}}
+        state: present
+
+    - name: reboot
+      reboot:
+
+#    - name: wait for reboot
+#      wait_for: 
+#        timeout: 20
+#      delegate_to: localhost
+
+    - debug:
+        msg: Kernel Version {{ ansible_kernel }}
+
+    - name: delete last kernel
+      command: package-cleanup --oldkernels --count=1 -y
+
+    - name: reboot
+      reboot:
+
